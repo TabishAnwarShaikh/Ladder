@@ -1,5 +1,6 @@
 package com.ideas.snakesnladders.core;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ideas.snakesnladders.Configuration;
@@ -22,29 +23,73 @@ public class DynamicBoardBuilder implements BoardBuilder {
 	 * @param numberOfColumns
 	 *            - the total number of columns on the board.
 	 * 
-	 * @param snakes
+	 * @param numberOfSnakes
 	 *            - the total number of snakes on the board.
 	 * 
-	 * @param ladders
+	 * @param numberOfLadders
 	 *            - the total number of ladders on the board.
 	 * 
 	 */
-	public DynamicBoardBuilder(int numberOfRows, int numberOfColumns, List<Snake> snakes, List<Ladder> ladders) {
+	public DynamicBoardBuilder(int numberOfRows, int numberOfColumns, int numberOfSnakes, int numberOfLadders) {
 		this.numberOfSquares = numberOfRows * numberOfColumns;
 		board = new int[this.numberOfSquares];
 		initializeBoard();
 
-		for (Snake snake : snakes) {
-			if ((snake.startPosition() > numberOfColumns) && (snake.endPosition() >= 1)) {
-				board[snake.startPosition()] = -(snake.startPosition() - snake.endPosition());
+		List<Snake> snakes = new ArrayList<Snake>();
+		SnakeBuilder snakeBuilder = new SnakeBuilder(numberOfRows, numberOfColumns);
+		for (int i = 0; i < numberOfSnakes; i++) {
+
+			// We need to check if the start positions don't overlap, else we
+			// have side effects.
+			while (true) {
+				boolean uniqueSnake = true;
+				Snake newSnake = snakeBuilder.build();
+				for (Snake snake : snakes) {
+					if (snake.startPosition() == newSnake.startPosition())
+						uniqueSnake = false;
+				}
+				if (uniqueSnake) {
+					snakes.add(newSnake);
+					break;
+				}
+			}
+		}
+		
+
+		List<Ladder> ladders = new ArrayList<Ladder>();
+		LadderBuilder ladderBuilder = new LadderBuilder(numberOfRows, numberOfColumns);
+		for (int i = 0; i < numberOfLadders; i++) {
+			// We need to check if the start positions don't overlap, else we
+			// have side effects.
+			while (true) {
+				boolean uniqueLadder = true;
+				Ladder newLadder = ladderBuilder.build();
+				for (Snake snake : snakes) {
+					if (snake.startPosition() == newLadder.startPosition())
+						uniqueLadder = false;
+				}
+				for (Ladder ladder : ladders) {
+					if (ladder.startPosition() == newLadder.startPosition())
+						uniqueLadder = false;
+				}
+				if (uniqueLadder) {
+					ladders.add(newLadder);
+					break;
+				}
 			}
 		}
 
-		for (Ladder ladder : ladders) {
-			if ((ladder.startPosition() > 1) && (ladder.endPosition() < numberOfSquares)) {
-				board[ladder.startPosition()] = (ladder.endPosition() - ladder.startPosition());
-			}
+		for (Snake snake : snakes) {
+			//System.out.println(snake);
+			board[snake.startPosition()] = -(snake.startPosition() - snake.endPosition());
 		}
+
+		for (Ladder ladder : ladders) {
+			//System.out.println(ladder);
+			board[ladder.startPosition()] = (ladder.endPosition() - ladder.startPosition());
+
+		}
+
 	}
 
 	/**

@@ -1,17 +1,10 @@
 package com.ideas.snakesnladders;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import junit.framework.TestCase;
 
 import org.junit.Test;
 
 import com.ideas.snakesnladders.core.DynamicBoardBuilder;
-import com.ideas.snakesnladders.core.Ladder;
-import com.ideas.snakesnladders.core.LadderBuilder;
-import com.ideas.snakesnladders.core.Snake;
-import com.ideas.snakesnladders.core.SnakeBuilder;
 
 public class DynamicBoardTest extends TestCase {
 
@@ -20,25 +13,32 @@ public class DynamicBoardTest extends TestCase {
 
 		int numberOfRows = 10;
 		int numberOfColumns = 10;
-		SnakeBuilder snakeBuilder = new SnakeBuilder(numberOfRows, numberOfColumns);
-		LadderBuilder ladderBuilder = new LadderBuilder(numberOfRows, numberOfColumns);
-		List<Snake> snakes = new ArrayList<Snake>();
-		List<Ladder> ladders = new ArrayList<Ladder>();
-		for (int i = 0; i < 5; i++) {
-			snakes.add(snakeBuilder.build());
-			ladders.add(ladderBuilder.build());
-		}
+		int numberOfSnakes = 7;
+		int numberOfLadders = 7;
 
-		DynamicBoardBuilder builder = new DynamicBoardBuilder(numberOfRows, numberOfColumns, snakes, ladders);
+		DynamicBoardBuilder builder = new DynamicBoardBuilder(numberOfRows, numberOfColumns, numberOfSnakes, numberOfLadders);
 
 		int board[] = builder.build();
 
 		assertTrue(board.length == (numberOfColumns * numberOfRows));
-		for (Snake snake : snakes)
-			assertTrue(board[snake.startPosition()] == -(snake.startPosition() - snake.endPosition()));
-		for (Ladder ladder : ladders)
-			assertTrue(board[ladder.startPosition()] == (ladder.endPosition() - ladder.startPosition()));
-
+		int snakeCount =0;
+		for(int i=0 ; i < board.length ;i++)
+		{
+			if(board[i] < 0)
+				snakeCount++;			
+		}
+		assertEquals(numberOfSnakes, snakeCount);
+		
+		int ladderCount =0;
+		for(int i=0 ; i < board.length ;i++)
+		{
+			if(board[i] > 0)
+				ladderCount++;			
+		}
+		assertEquals(numberOfLadders, ladderCount);
+		
+		
+		
 	}
 
 }
