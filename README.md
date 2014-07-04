@@ -12,7 +12,7 @@ Installation:
 1. Checkout the repository in a ${dir}
 2. Run mvn clean install 
 3. To run the program go to the ${dir}/target folder
-4. Type in java -jar snakesnladders-0.0.1-SNAPSHOT.jar
+4. Type in java -jar Ladder-1.0-SNAPSHOT.jar
 
 
 Guide
