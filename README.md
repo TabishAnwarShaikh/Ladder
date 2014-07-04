@@ -20,9 +20,9 @@ Guide
 1. When the game starts it shows the following menu
 ###################################
 !! Snakes & Ladders !!
-Enter 1 to run the game.
-Enter 2 to configure.
-Enter 3 to exit.
+  - Enter 1 to run the game.
+  - Enter 2 to configure.
+  - Enter 3 to exit.
 
 2. Selecting 1 runs the game using a preconfigured board of 10 rows and 12 columns and 2 players.
 3. Selecting 2 , user is able to configure the following 
